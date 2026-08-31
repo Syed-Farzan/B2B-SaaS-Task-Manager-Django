@@ -58,3 +58,11 @@ class Membership(models.Model):
                 fields=["user", "organization"], name="unique_user_organization"
             )
         ]
+
+
+class Project(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.TextField(blank=False)
+    description = models.TextField(blank=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

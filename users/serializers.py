@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Organization, User, Membership
+from .models import Organization, User, Membership, Project
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -42,3 +42,11 @@ class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
         fields = ["organization", "user", "role"]
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = ["id", "name", "description", "organization", "created_at"]
+        read_only_fields = ["id", "created_at"]

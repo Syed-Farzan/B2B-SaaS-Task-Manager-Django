@@ -10,8 +10,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 
-from .models import Organization, User, Membership
-from .serializers import OrganizationSerializer, UserSerializer, MembershipSerializer
+from .models import Organization, User, Membership, Project
+from .serializers import (
+    OrganizationSerializer,
+    UserSerializer,
+    MembershipSerializer,
+    ProjectSerializer,
+)
 from .permissions import IsOrganizationAdmin
 
 
@@ -115,3 +120,13 @@ class UserMeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+
+class ProjectListCreateView(ListCreateAPIView):
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+
+
+class ProjectDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
