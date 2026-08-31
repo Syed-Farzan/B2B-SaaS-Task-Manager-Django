@@ -40,6 +40,7 @@ class OrganizationListCreateView(ListCreateAPIView):
 class OrganizationDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+    permission_classes = [IsAuthenticated, IsOrganizationAdmin]
 
     def get_queryset(self):
         return Organization.objects.filter(membership__user=self.request.user)
