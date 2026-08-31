@@ -85,6 +85,19 @@ class MembershipDetailView(RetrieveUpdateDestroyAPIView):
             organization__membership__user=self.request.user
         )
 
+    def perform_destroy(self, instance):
+        if instance.role == Membership.Role.ADMIN:
+            admin_count = Membership.objects.filter(
+                organization=instance.organization, role=Membership.Role.ADMIN
+            ).count()
+
+            if admin_count == 1:
+                raise PermissionDenied(
+                    "Cannot delete the last admin of an organization."
+                )
+
+        instance.delete()
+
 
 class UserRegistrationView(CreateAPIView):
     queryset = User.objects.all()
