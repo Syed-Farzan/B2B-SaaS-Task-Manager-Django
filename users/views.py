@@ -126,7 +126,13 @@ class ProjectListCreateView(ListCreateAPIView):
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
 
+    def get_queryset(self):
+        return Project.objects.filter(organization__membership__user=self.request.user)
+
 
 class ProjectDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        return Project.objects.filter(organization__membership__user=self.request.user)
