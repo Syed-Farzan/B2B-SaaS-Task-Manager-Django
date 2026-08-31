@@ -129,8 +129,24 @@ class ProjectListCreateView(ListCreateAPIView):
     def get_queryset(self):
         return Project.objects.filter(organization__membership__user=self.request.user)
 
+    def perform_create(self, serializer):
+        organization = serializer.validated_data["organization"]
+
+        is_admin = Membership.objects.filter(
+            user=self.request.user,
+            organization=organization,
+            role=Membership.Role.ADMIN,
+        ).exists()
+        if not is_admin:
+            raise PermissionDenied(
+                "You do not have permission to create projects in this organization."
+            )
+
+        serializer.save()
+
 
 class ProjectDetailView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsOrganizationAdmin]
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
